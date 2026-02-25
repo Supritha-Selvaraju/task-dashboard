@@ -1,0 +1,39 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# Environment Variables
+
+.env
+.env.*
+!.env.example
+
+# Build Output
+dist/
+build/
+.dist/
+
+
+# Prisma
+.prisma/
+prisma/migrations/
+/src/generated/prisma
+
+
+# Logs
+logs/
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Docker (override files)
+docker-compose.override.yml
