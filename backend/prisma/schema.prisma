@@ -74,15 +74,16 @@ model Task {
   status      Status    @default(TODO)
   dueDate     DateTime?
   order       Int       @default(0)
-
-  userId     String
-  teamId     String?
-  assigneeId String?
-
-  creator  User  @relation("CreatedTasks", fields: [userId], references: [id])
-  team     Team? @relation(fields: [teamId], references: [id])
-  assignee User? @relation("AssignedTasks", fields: [assigneeId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  
+  userId      String
+  teamId      String?
+  assigneeId  String?
+  
+  creator     User      @relation("CreatedTasks", fields: [userId], references: [id])
+  team        Team?     @relation(fields: [teamId], references: [id])
+  assignee    User?     @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
+
