@@ -31,6 +31,7 @@ export default function Signup() {
         name,
         email,
         password,
+        confirmPassword,
       });
 
       login(data.token, data.user);
