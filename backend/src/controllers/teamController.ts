@@ -8,34 +8,72 @@ interface AuthRequest extends Request {
 export const createTeam = async (req: AuthRequest, res: Response) => {
   try {
     const { name, description } = req.body;
-    
-    const team = await prisma.team.create({
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        error: "Team name is required",
+      });
+    }
+
+    const trimmedName = name.trim();
+
+    // Check if team exists
+    let team = await prisma.team.findFirst({
+      where: { name: trimmedName },
+    });
+
+    if (team) {
+      const existingMembership = await prisma.teamMember.findUnique({
+        where: {
+          userId_teamId: {
+            userId: req.user!.id,
+            teamId: team.id,
+          },
+        },
+      });
+
+      if (!existingMembership) {
+        await prisma.teamMember.create({
+          data: {
+            userId: req.user!.id,
+            teamId: team.id,
+            role: "MEMBER",
+          },
+        });
+      }
+
+      return res.status(200).json({
+        message: "Joined existing team",
+        team,
+      });
+    }
+
+    // Create new team
+    team = await prisma.team.create({
       data: {
-        name,
-        description,
+        name: trimmedName,
+        description: description?.trim() || null,
         ownerId: req.user!.id,
-      },
-      include: {
-        owner: { select: { id: true, name: true, email: true } },
-        members: true,
       },
     });
 
-    // Add creator as owner
     await prisma.teamMember.create({
       data: {
         userId: req.user!.id,
         teamId: team.id,
-        role: 'OWNER',
+        role: "OWNER",
       },
     });
 
-    res.status(201).json(team);
+    res.status(201).json({
+      message: "Team created",
+      team,
+    });
+
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: "Server error" });
   }
 };
-
 export const getTeams = async (req: AuthRequest, res: Response) => {
   try {
     const teams = await prisma.team.findMany({
@@ -53,5 +91,36 @@ export const getTeams = async (req: AuthRequest, res: Response) => {
     res.json(teams);
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
+  }
+};
+export const getTeamMembers = async (req: AuthRequest, res: Response) => {
+  try {
+    const { teamId } = req.params;
+
+    const membership = await prisma.teamMember.findUnique({
+      where: {
+        userId_teamId: {
+          userId: req.user!.id,
+          teamId,
+        },
+      },
+    });
+
+    if (!membership) {
+      return res.status(403).json({ error: "Not authorized" });
+    }
+
+    const members = await prisma.teamMember.findMany({
+      where: { teamId },
+      include: {
+        user: {
+          select: { id: true, name: true, email: true },
+        },
+      },
+    });
+
+    res.json(members);
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
   }
 };

@@ -1,116 +1,216 @@
-Secure Task Management Dashboard
-Overview
+# DailyDo - Task Management Dashboard
 
-This project is part of a full-stack technical assessment to build a secure, type-safe Task Management Dashboard using React, TypeScript, and Node.js.
+A full-stack Task Management Dashboard built with React, TypeScript, Node.js, and PostgreSQL. Secure, type-safe, and designed for both personal and team task management.
 
-At the current stage, the backend foundation and authentication system have been implemented. The focus so far has been on establishing a clean architecture, database integration, and secure JWT-based authentication. Task management and frontend integration will follow in subsequent commits.
+## 🚀 Features
 
-Project Plan
+### Authentication & Onboarding
+- **User Registration & Login** - Secure JWT-based authentication
+- **Onboarding Flow** - Choose between Personal or Team workspace
+- **Protected Routes** - Authenticated access to dashboard
 
-The development plan is structured in incremental stages:
+### Task Management
+- **Create Tasks** - Add tasks with title, description, priority, and due date
+- **Task Status Tracking** - TODO → IN PROGRESS → DONE workflow
+- **Priority Levels** - LOW, MEDIUM, HIGH with visual indicators
+- **Due Date Tracking** - Calendar integration for deadlines
 
-Backend foundation and database setup
+### Team Collaboration
+- **Create Teams** - Collaborate with team members
+- **Team Tasks** - View and manage team-assigned tasks
+- **Role Management** - OWNER, MEMBER, VIEWER roles
 
-Secure authentication using JWT
+### Dashboard & Analytics
+- **Weekly Analytics** - Visual charts showing task completion trends
+- **Calendar View** - Interactive calendar with task deadlines
+- **Workflow Banner** - Real-time workflow status overview
+- **Task Filtering** - Search, sort, and filter by status/priority
 
-Task CRUD functionality
+## 🛠️ Tech Stack
 
-Team and role-based features
+### Frontend
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Zustand** - State management
+- **React Router** - Navigation
+- **Recharts** - Analytics charts
 
-Frontend integration with React and TypeScript
+### Backend
+- **Node.js** - Runtime
+- **Express** - Web framework
+- **TypeScript** - Type safety
+- **Prisma ORM** - Database access
+- **PostgreSQL** - Database
+- **JWT** - Authentication
+- **bcrypt** - Password hashing
 
-UI refinement, state management, and third-party integrations
+## 📁 Project Structure
 
-The repository reflects this progression through structured and descriptive commits.
-
-Project Structure (Current State)
+```
 task-dashboard/
-│
 ├── backend/
 │   ├── prisma/
-│   │   └── schema.prisma
+│   │   └── schema.prisma          # Database schema
 │   ├── src/
-│   │   ├── controllers/
+│   │   ├── controllers/           # Business logic
+│   │   │   ├── authController.ts
+│   │   │   ├── taskController.ts
+│   │   │   └── teamController.ts
 │   │   ├── middleware/
-│   │   ├── routes/
-│   │   ├── types/
-│   │   ├── utils/
+│   │   │   └── auth.ts            # JWT authentication
+│   ├── routes/                    # API routes
+│   │   ├── auth.ts
+│   │   ├── tasks.ts
+│   │   └── teams.ts
+│   ├── types/
 │   │   └── index.ts
+│   ├── utils/
+│   │   └── prisma.ts
+│   ├── index.ts                   # Server entry
 │   ├── package.json
 │   └── tsconfig.json
 │
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── dashboard/         # Dashboard components
+│   │   │   │   ├── DashboardLayout.tsx
+│   │   │   │   ├── Sidebar.tsx
+│   │   │   │   ├── Topbar.tsx
+│   │   │   │   ├── WorkflowBanner.tsx
+│   │   │   │   ├── WeeklyAnalytics.tsx
+│   │   │   │   ├── TaskCalendar.tsx
+│   │   │   │   └── useWeeklyAnalytics.ts
+│   │   │   ├── tasks/             # Task components
+│   │   │   │   ├── TaskBoard.tsx
+│   │   │   │   ├── TaskCard.tsx
+│   │   │   │   ├── TaskControls.tsx
+│   │   │   │   ├── CreateTaskModal.tsx
+│   │   │   │   ├── CreateTeamModal.tsx
+│   │   │   │   └── sidebar/
+│   │   │   │       └── TeamsList.tsx
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── Hero.tsx
+│   │   │   └── ...
+│   │   ├── pages/
+│   │   │   ├── Landing.tsx
+│   │   │   ├── Login.tsx
+│   │   │   ├── Signup.tsx
+│   │   │   ├── Onboarding.tsx
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── MyTasksPage.tsx
+│   │   │   └── TeamPage.tsx
+│   │   ├── stores/
+│   │   │   └── authStore.ts       # Zustand auth state
+│   │   ├── lib/
+│   │   │   ├── api.ts
+│   │   │   └── axios.ts
+│   │   ├── types/
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── package.json
+│   ├── tailwind.config.js
+│   ├── vite.config.ts
+│   └── tsconfig.json
+│
+├── docker-compose.yml
+├── package.json
 └── README.md
+```
 
-The structure separates responsibilities clearly:
+## 🔧 Getting Started
 
-Controllers handle business logic
+### Prerequisites
+- Node.js 18+
+- PostgreSQL database
+- npm or yarn
 
-Routes define API endpoints
+### Backend Setup
 
-Middleware manages authentication
+```
+bash
+# Navigate to backend
+cd backend
 
-Utils contains shared helpers (e.g., Prisma client)
-
-Types centralize TypeScript interfaces
-
-Implemented Functionality
-Backend Setup
-
-Express server configured with TypeScript (strict mode enabled)
-
-Prisma ORM integrated with PostgreSQL
-
-Environment configuration via dotenv
-
-Clean modular architecture
-
-Authentication (JWT)
-
-The authentication system is fully implemented and secured.
-
-Features include:
-
-User registration with password hashing (bcrypt)
-
-User login with credential validation
-
-JWT token generation
-
-Authentication middleware to protect private routes
-
-Type-safe request handling
-
-Environment-based secret management
-
-All protected routes require a valid Bearer token in the Authorization header. Requests without a valid token are rejected.
-
-Running the Project Locally
-
-Clone the repository and navigate to the backend folder:
-
-cd task-dashboard/backend
-
-Install dependencies:
-
+# Install dependencies
 npm install
 
-Create a .env file inside the backend directory with:
-
-DATABASE_URL=your_database_url
-JWT_SECRET=your_secret_key
+# Create .env file
+DATABASE_URL=postgresql://user:password@localhost:5432/dailydb
+JWT_SECRET=your_super_secret_key
 PORT=5000
 
-Run Prisma migrations:
-
+# Run Prisma migrations
 npx prisma migrate dev
 
-Start the development server:
-
+# Start development server
 npm run dev
+```
 
-The server will run on:
+### Frontend Setup
 
-http://localhost:5000
+```
+bash
+# Navigate to frontend
+cd frontend
 
-At this stage, authentication endpoints are available and secured.
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The frontend will be available at: **http://localhost:5173**
+
+##  API Endpoints
+
+### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login user |
+| GET | `/api/auth/me` | Get current user |
+
+### Tasks
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/tasks` | Get all tasks |
+| POST | `/api/tasks` | Create new task |
+| PUT | `/api/tasks/:id` | Update task |
+| DELETE | `/api/tasks/:id` | Delete task |
+
+### Teams
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/teams` | Get user teams |
+| POST | `/api/teams` | Create new team |
+
+## 🔐 Security Features
+
+- **Password Hashing** - bcrypt for secure password storage
+- **JWT Tokens** - Stateless authentication
+- **Protected Routes** - Middleware validation
+- **Type Safety** - Full TypeScript implementation
+- **Environment Variables** - Sensitive data protection
+
+## 📊 Database Schema
+
+### User
+- id, email, name, password
+- timestamps (createdAt, updatedAt)
+
+### Team
+- id, name, description, ownerId
+- timestamps
+
+### Task
+- id, title, description, priority, status, dueDate, order
+- userId, teamId, assigneeId
+- timestamps
+
+### TeamMember
+- id, userId, teamId, role (OWNER/MEMBER/VIEWER)
 
